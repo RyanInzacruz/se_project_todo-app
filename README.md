@@ -42,4 +42,4 @@
 
 This project is deployed on GitHub Pages:
 
-- ADD LINK HERE
+[View the live app here](https://ryaninzacruz.github.io/se_project_todo-app/)
