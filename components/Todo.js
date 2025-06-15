@@ -11,7 +11,7 @@ class Todo {
 
     this._todoDeleteBtn.addEventListener("click", () => {
       this._todoElement.remove();
-      console.log("removed");
+      this._todoElement = null;
     });
   }
 
