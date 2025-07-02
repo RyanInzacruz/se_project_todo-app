@@ -15,6 +15,28 @@ const todosList = document.querySelector(".todos__list");
 
 const todoCounter = new TodoCounter(initialTodos, ".counter__text");
 
+const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
+newTodoValidator.enableValidation();
+
+const generateTodo = (data) => {
+  const todo = new Todo(data, "#todo-template", todoCounter);
+  const todoElement = todo.getView();
+  return todoElement;
+};
+
+function renderTodo(item) {
+  const todoElement = generateTodo(item);
+  return todoElement;
+}
+
+const section = new Section({
+  items: initialTodos,
+  renderer: renderTodo,
+  containerSelector: ".todos__list",
+});
+
+section.renderItems();
+
 const addTodoPopup = new PopupWithForm({
   popupSelector: "#add-todo-popup",
   handleFormSubmit: (inputValues) => {
@@ -30,10 +52,12 @@ const addTodoPopup = new PopupWithForm({
       completed: false,
     };
 
-    const todoElement = generateTodo(todoData);
+    const todoElement = renderTodo(todoData);
     section.addItem(todoElement);
     todoCounter.updateTotal(true);
 
+    addTodoForm.reset();
+    newTodoValidator.resetValidation();
     addTodoPopup.close();
   },
   formValidator: newTodoValidator,
@@ -41,27 +65,6 @@ const addTodoPopup = new PopupWithForm({
 
 addTodoPopup.setEventListeners();
 
-const generateTodo = (data) => {
-  const todo = new Todo(data, "#todo-template", todoCounter);
-  const todoElement = todo.getView();
-  return todoElement;
-};
-
-const section = new Section({
-  items: initialTodos,
-  renderer: (item) => {
-    const todoElement = generateTodo(item);
-    section.addItem(todoElement);
-  },
-  containerSelector: ".todos__list",
-});
-
-section.renderItems();
-
 addTodoButton.addEventListener("click", () => {
-  newTodoValidator.resetValidation();
   addTodoPopup.open();
 });
-
-const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
-newTodoValidator.enableValidation();
