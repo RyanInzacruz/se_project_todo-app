@@ -1,21 +1,19 @@
 class Todo {
-  constructor(data, selector, todoCounter) {
+  constructor(data, selector, handleCheck, handleDelete) {
     this._data = data;
     this._templateElement = document.querySelector(selector);
-    this._todoCounter = todoCounter; // store the passed in counter
+    this._handleCheck = handleCheck; // store callback
+    this._handleDelete = handleDelete; // store callback
   }
 
   _setEventListeners() {
     this._todoCheckboxEl.addEventListener("change", () => {
-      this._data.completed = !this._data.completed;
-      this._todoCounter.updateCompleted(this._todoCheckboxEl.checked);
+      this._data.completed = this._todoCheckboxEl.checked;
+      this._handleCheck(this._data.completed);
     });
 
     this._todoDeleteBtn.addEventListener("click", () => {
-      if (this._data.completed) {
-        this._todoCounter.updateCompleted(false);
-      }
-      this._todoCounter.updateTotal(false);
+      this._handleDelete(this._data.completed);
       this._todoElement.remove();
       this._todoElement = null;
     });
